@@ -12,20 +12,21 @@ class MyApp extends StatelessWidget {
   Widget build(BuildContext context) {
     return const MaterialApp(
       title: 'Quiz App',
-      home: HomeScreen(),
+      home: QuestionScreen(),
     );
   }
 }
 
-class HomeScreen extends StatefulWidget {
-  const HomeScreen({Key? key}) : super(key: key);
+class QuestionScreen extends StatefulWidget {
+  const QuestionScreen({Key? key}) : super(key: key);
 
   @override
-  State<HomeScreen> createState() => _HomeScreenState();
+  State<QuestionScreen> createState() => _QuestionScreenState();
 }
 
-class _HomeScreenState extends State<HomeScreen> {
+class _QuestionScreenState extends State<QuestionScreen> {
   late PageController _ctrl;
+  int _score = 0;
 
   @override
   void initState() {
@@ -65,6 +66,9 @@ class _HomeScreenState extends State<HomeScreen> {
                               question.isLocked = true;
                               question.selectedOption = option;
                             });
+                            if (question.selectedOption!.isCorrect) {
+                              _score++;
+                            }
                           }
                         })),
                 ElevatedButton(
@@ -73,7 +77,12 @@ class _HomeScreenState extends State<HomeScreen> {
                       _ctrl.nextPage(
                           duration: const Duration(milliseconds: 250),
                           curve: Curves.easeInExpo);
-                    } else {}
+                    } else {
+                      Navigator.pushReplacement(
+                          context,
+                          MaterialPageRoute(
+                              builder: (context) => ResultPage(score: _score)));
+                    }
                   },
                   child: i + 1 < questions.length
                       ? const Text('Next')
@@ -150,5 +159,19 @@ class OptionWidget extends StatelessWidget {
       }
     }
     return const SizedBox.shrink();
+  }
+}
+
+class ResultPage extends StatelessWidget {
+  const ResultPage({Key? key, required this.score}) : super(key: key);
+  final int score;
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+        appBar: AppBar(title: const Text('Result')),
+        body: Center(
+          child: Text('you got $score out of ${questions.length}'),
+        ));
   }
 }
