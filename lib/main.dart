@@ -9,7 +9,7 @@ class MyApp extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return MaterialApp(
+    return const MaterialApp(
       title: 'Quiz App',
       home: HomeScreen(),
     );
@@ -27,11 +27,26 @@ class _HomeScreenState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: AppBar(title: Text('Quiz App')),
+      appBar: AppBar(title: const Text('Quiz App')),
       body: PageView.builder(
         itemCount: 10,
-        itemBuilder: (context, int) {
-          return Text('data');
+        itemBuilder: (context, index) {
+          return Column(
+            crossAxisAlignment: CrossAxisAlignment.center,
+            children: [
+              // ignore: prefer_const_constructors
+              Text('Q #', style: const TextStyle(fontSize: 20)),
+              // ignore: prefer_const_constructors
+              const SizedBox(height: 10),
+              ElevatedButton(onPressed: () {}, child: Text('A 1')),
+              const SizedBox(height: 5),
+              ElevatedButton(onPressed: () {}, child: Text('A 2')),
+              const SizedBox(height: 5),
+              ElevatedButton(onPressed: () {}, child: Text('A 3')),
+              const SizedBox(height: 5),
+              ElevatedButton(onPressed: () {}, child: Text('A 4')),
+            ],
+          );
         },
       ),
     );
