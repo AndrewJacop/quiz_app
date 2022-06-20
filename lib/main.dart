@@ -97,8 +97,10 @@ class OptionWidget extends StatelessWidget {
           borderRadius: BorderRadius.circular(16),
         ),
         child: Row(
+          mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
             Text(option.txt, style: TextStyle(fontSize: 20)),
+            getIconForOption(option, question),
           ],
         ),
       ),
@@ -114,5 +116,18 @@ class OptionWidget extends StatelessWidget {
       }
     }
     return Colors.grey;
+  }
+
+  Widget getIconForOption(Option option, Question question) {
+    if (question.isLocked) {
+      if (option == question.selectedOption) {
+        return option.isCorrect
+            ? const Icon(Icons.check_circle, color: Colors.green)
+            : const Icon(Icons.cancel, color: Colors.red);
+      } else if (option.isCorrect) {
+        return const Icon(Icons.check_circle, color: Colors.green);
+      }
+    }
+    return const SizedBox.shrink();
   }
 }
