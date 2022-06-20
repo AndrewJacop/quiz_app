@@ -25,11 +25,20 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeScreenState extends State<HomeScreen> {
+  late PageController _ctrl;
+
+  @override
+  void initState() {
+    super.initState();
+    _ctrl = PageController(initialPage: 0);
+  }
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(title: const Text('Quiz App')),
       body: PageView.builder(
+        controller: _ctrl,
         physics: const NeverScrollableScrollPhysics(),
         itemCount: questions.length,
         itemBuilder: (context, i) {
@@ -40,7 +49,7 @@ class _HomeScreenState extends State<HomeScreen> {
               crossAxisAlignment: CrossAxisAlignment.center,
               children: [
                 const SizedBox(height: 5),
-                Text('Question $i / ${questions.length}',
+                Text('Question ${i + 1} / ${questions.length}',
                     style: const TextStyle(fontSize: 30)),
                 const Divider(thickness: 3),
                 Text(question.txt, style: const TextStyle(fontSize: 20)),
@@ -57,7 +66,19 @@ class _HomeScreenState extends State<HomeScreen> {
                               question.selectedOption = option;
                             });
                           }
-                        }))
+                        })),
+                ElevatedButton(
+                  onPressed: () {
+                    if (i + 1 < questions.length) {
+                      _ctrl.nextPage(
+                          duration: const Duration(milliseconds: 250),
+                          curve: Curves.easeInExpo);
+                    } else {}
+                  },
+                  child: i + 1 < questions.length
+                      ? const Text('Next')
+                      : const Text('Result'),
+                )
               ],
             ),
           );
@@ -89,8 +110,8 @@ class OptionWidget extends StatelessWidget {
       onTap: () => onClickedOption(option),
       child: Container(
         height: 50,
-        padding: EdgeInsets.all(12),
-        margin: EdgeInsets.symmetric(vertical: 8),
+        padding: const EdgeInsets.all(12),
+        margin: const EdgeInsets.symmetric(vertical: 8),
         decoration: BoxDecoration(
           color: Colors.grey[300],
           border: Border.all(color: borderColor, width: 1.5),
@@ -99,7 +120,7 @@ class OptionWidget extends StatelessWidget {
         child: Row(
           mainAxisAlignment: MainAxisAlignment.spaceBetween,
           children: [
-            Text(option.txt, style: TextStyle(fontSize: 20)),
+            Text(option.txt, style: const TextStyle(fontSize: 20)),
             getIconForOption(option, question),
           ],
         ),
